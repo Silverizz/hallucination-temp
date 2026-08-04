@@ -1,7 +1,7 @@
 import "dotenv/config";
 import * as readline from "node:readline/promises";
 import { OllamaProvider } from "./llm/ollama";
-import { ScenarioGenerator } from "./services/ScenarioGenerator";
+import { StatementGenerator } from "./services/StatementGenerator";
 import { GameSession } from "./services/GameLogic";
 
 async function main() {
@@ -9,36 +9,37 @@ async function main() {
         process.env.OLLAMA_MODEL,
         process.env.OLLAMA_BASE_URL
     );
+    const generator = new StatementGenerator(llm);
 
-    const generator = new ScenarioGenerator(llm);
+    console.log("Generating statement...\n");
+    const statement = await generator.generate("History", "Medium");
 
-    const scenario = await generator.generate("History", "Medium");
+    const session = new GameSession(statement);
+    const publicStatement = session.getPublicStatement();
 
-    const session = new GameSession(scenario);
-
-    console.log(session.getQuestion());
+    console.log(`[${publicStatement.topic} - ${publicStatement.difficulty}]`);
+    console.log(publicStatement.text);
     console.log();
-    console.log(session.getResponseText());
-    console.log();
-    console.log("Which claim do you think is FALSE? \n");
 
-    session.getPublicClaims().forEach((claim) => {console.log(`  [${claim.index}] ${claim.text}`)});
+    const rl = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout,
+    });
 
+    const answer = await rl.question("True or False? (t/f): ");
+    rl.close();
 
-
-    // Temporary terminal input
-    const r1 = readline.createInterface({input: process.stdin, output: process.stdout});
-    const answer = await r1.question("\n Enter the number: ");
-    r1.close();
-
-    const result = session.submitAnswer(parseInt(answer, 10));
+    const guess = answer.trim().toLowerCase().startsWith("t");
+    const result = session.submitAnswer(guess);
 
     console.log();
     console.log(result.correct ? "✓ Correct!" : " ✘ Not quite");
-    console.log(`The false claim was [${result.correctIndex}]`);
+    console.log(
+        `The statement was actually: ${result.actualAnswer ? "TRUE" : "FALSE"}`
+    );
     console.log(`Why: ${result.explanation}`);
-    console.log(`Points earnend: ${result.pointsAwarded}`);
-    console.log(`Total Score: ${session.getScore()}`);
+    console.log(`Points earned: ${result.pointsAwarded}`);
+    console.log(`Total score: ${session.getScore()}`);
 }
 
 main().catch(console.error);

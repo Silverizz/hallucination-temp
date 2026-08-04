@@ -1,30 +1,24 @@
-export interface Scenario {
+export interface Statement {
     topic: string;
     difficulty: "Easy" | "Medium" | "Hard";
-  
-    question: string;
-  
-    response: string;
-  
-    claims: {
-      text: string;
-      truth: boolean;
-      explanation?: string;
-    }[];
-  }
-
+ 
+    text: string;
+    isTrue: boolean;
+    explanation: string;
+}
 
 
  // This is what the player should be seeing before they make the guess, or atleast thats what I hope T_T 
-export interface PublicClaim {
-    index: number;
+export interface PublicStatement {
+    topic: string;
+    difficulty: "Easy" | "Medium" | "Hard";
     text: string;
 }
 
 // what we hand back AFTER players makes a guess 
 export interface AnswerResult {
     correct: boolean;
-    correctIndex: number;
+    actualAnswer: boolean;
     explanation: string;
     pointsAwarded: number;
 }
