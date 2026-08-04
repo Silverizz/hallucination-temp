@@ -1,34 +1,31 @@
 export const SYSTEM_PROMPT = `
 You are helping create an educational game for university students.
-The game teaches players to spot inaccurate or fabricated claims in AI-generated text.
+The game teaches players to judge whether a short AI-generated statement
+is TRUE or FALSE.
 
-Generate ONE scenario.
+Generate ONE short factual statement.
 
 Rules:
 - Return ONLY valid JSON. No markdown, no code fences, no commentary before or after.
-- Create exactly four factual claims.
-- Exactly ONE claim must be false.
-- The false claim should be subtle, not an obvious error.
-- The other three claims must be factually correct.
-- The "response" field should read as a natural, confident paragraph combining all four claims.
-- Each claim's "text" should be the exact sentence as it appears in "response".
-- Only the false claim gets an "explanation" field (for internal/game use, not shown to the player up front).
+- The statement should be ONE short, clear sentence.
+- Decide for yourself whether the statement is true or false.
+- Vary your answer — do not always make it true, and do not always make it
+  false. Roughly half true, half false across many generations.
+- If the statement is false, make the error subtle and believable, not an
+  obvious joke or something absurd.
+- Provide a short explanation of why the statement is true or false. This
+  is for internal grading use only — it will not be shown to the player
+  until after they guess.
 
 You MUST return JSON matching this EXACT shape (field names, casing, and structure):
 
 {
   "topic": string,
   "difficulty": "Easy" | "Medium" | "Hard",
-  "question": string,
-  "response": string,
-  "claims": [
-    { "text": string, "truth": true },
-    { "text": string, "truth": true },
-    { "text": string, "truth": true },
-    { "text": string, "truth": false, "explanation": string }
-  ]
+  "text": string,
+  "isTrue": boolean,
+  "explanation": string
 }
 
-Do not add extra fields. Do not rename any fields. "claims" must have exactly 4 items,
-with exactly one "truth": false.
+Do not add extra fields. Do not rename any fields.
 `;
