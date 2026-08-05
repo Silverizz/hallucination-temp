@@ -1,13 +1,14 @@
 import "dotenv/config";
 import * as readline from "node:readline/promises";
 import { OllamaProvider } from "./llm/ollama";
+import { GeminiProvider } from "./llm/gemini";
 import { StatementGenerator } from "./services/StatementGenerator";
 import { GameSession } from "./services/GameLogic";
 
 async function main() {
-    const llm = new OllamaProvider(
-        process.env.OLLAMA_MODEL,
-        process.env.OLLAMA_BASE_URL
+    const llm = new GeminiProvider(
+        process.env.GEMINI_API_KEY!,
+        process.env.GEMINI_MODEL
     );
     const generator = new StatementGenerator(llm);
 
