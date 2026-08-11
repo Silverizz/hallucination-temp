@@ -1,4 +1,4 @@
-import { LLMProvider } from "./LLMProvider";
+import { LLMSelect } from "./LLMSelect";
 
 /**
  * Talks to a locally running Ollama instance (https://ollama.com).
@@ -8,7 +8,7 @@ import { LLMProvider } from "./LLMProvider";
  * Requires `ollama serve` to be running locally, and the model to
  * have been pulled first, e.g. `ollama pull llama3`.
  */
-export class OllamaProvider implements LLMProvider {
+export class Ollama implements LLMSelect {
     constructor(
         private model = "llama3",
         private baseUrl = "http://localhost:11434"
