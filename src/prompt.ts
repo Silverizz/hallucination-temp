@@ -23,9 +23,15 @@ You MUST return JSON matching this EXACT shape (field names, casing, and structu
   "topic": string,
   "difficulty": "Easy" | "Medium" | "Hard",
   "text": string,
-  "isTrue": boolean,
-  "explanation": string
+  "explanation": string,
+  "isTrue": boolean
 }
 
 Do not add extra fields. Do not rename any fields.
+
+IMPORTANT: write "explanation" BEFORE deciding "isTrue". Reason through
+whether the statement is actually accurate first, in the explanation,
+THEN commit to the isTrue verdict that matches your own reasoning. Do not
+contradict your own explanation — if your explanation says something is
+wrong, isTrue must be false, and vice versa.
 `;
